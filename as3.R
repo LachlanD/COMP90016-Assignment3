@@ -9,8 +9,8 @@
 
  
 deletions = read.csv("deletion_signal_a2.txt", sep= '\t', header = F)
-par(pch=4)
-plot(x = deletions$V2, y= deletions$V3, xlab = "Left Coordinate", ylab = "Right Coordinate", main = "2 Standard deviations")
+#par(pch=4)
+#plot(x = deletions$V2, y= deletions$V3, xlab = "Left Coordinate", ylab = "Right Coordinate", main = "2 Standard deviations")
 
 #deletions3 = read.csv("deletion_signal_a3.txt", sep= '\t', header = F)
 #plot(x = deletions3$V2, y = deletions3$V3, xlab = "Left Coordinate", ylab = "Right Coordinate", main = "3 Standard deviations")
@@ -23,7 +23,7 @@ distance_matrix = dist(deletions[,2:3], method = "maximum")
 # Hierachial clustering with complete linkage
 # the distance between the clusters is the furthest distance pair 
 clust = hclust(distance_matrix, method = "complete")
-plot(clust)
+#plot(clust)
 
 #clust3 = hclust(dist(deletions3[,2:3], method = "maximum"))
 
@@ -44,18 +44,22 @@ n = max(cut)
 
 # Size of each cluster
 c_size = lapply(1:n, function(x) sum(cut==x))
+#c_size3 = lapply(1:n3, function(x) sum(cut3==x))
 
 deletions[,4] = cut
+#deletions3[,4] = cut3
+
+#added a max delete length to get rid of some very long very wrong deletes
+max_delete_length = 100000000 #None
 
 # For each cluster with a size more than 5
 # output the maximum of  the left reads and the minimum right reads
-
-#added a max delete length to get rid of some very long very wrong deletes
-max_delete_length = 100000000 #None 
+count2 = 0
 for( i in 1:n)
 {
   if (c_size[i]>5)
   {
+    count2 = count2 + 1 
     cl = deletions[deletions[,4]==i,]
     start = max(cl[,2])
     end = min(cl[,3])
@@ -66,4 +70,19 @@ for( i in 1:n)
   }
 }
 
+#count3 = 0
+#for( i in 1:n3)
+#{
+#  if (c_size3[i]>5)
+#  {
+#    count3 = count3 + 1
+#    cl = deletions3[deletions3[,4]==i,]
+#    start = max(cl[,2])
+#    end = min(cl[,3])
+#    if ((end-start)<max_delete_length)
+#    {
+#      print(c(i, max(cl[,2]), min(cl[,3])))
+#    }
+#  }
+#}
 

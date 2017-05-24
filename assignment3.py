@@ -41,13 +41,19 @@ for read in samfile.fetch(until_eof=True):
 mean = numpy.mean(size)
 sd = numpy.std(size)
 
+print("mean: " + str(mean))
+print("sd: " + str(sd))
 
+c = 0
 deletes = []
 for read in samfile.fetch():
+  c += 1
   # Keep reads that are longer than expected
   # Note finding the mate now will mess up the iterator, do that later
   if (read.template_length > (mean + a*sd)):
     deletes.append(read)
+
+print("Number of reads: " + str(c))
 
 filename = "deletion_signal_a" + str(int(a)) + ".txt"
 out = open(filename, 'w')
